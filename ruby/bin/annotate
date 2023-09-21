@@ -50,6 +50,8 @@ def message_content(element)
   end
 end
 
+files = []
+
 junit_report_files.sort.each do |file|
   next if File.directory?(file)
 
@@ -63,6 +65,7 @@ junit_report_files.sort.each do |file|
     name = testcase.attributes['name'].to_s
     unit_name = testcase.attributes[failure_format].to_s
     time = testcase.attributes['time'].to_f
+    files << testcase.attributes['file']
     timings << Timing.new(name, unit_name, time)
     testcase.elements.each("failure") do |failure|
       failures << Failure.new(name, unit_name, text_content(failure), job, :failure, message_content(failure))
@@ -72,6 +75,8 @@ junit_report_files.sort.each do |file|
     end
   end
 end
+
+files.uniq!
 
 STDERR.puts "--- ✍️ Preparing annotation"
 
@@ -97,6 +102,8 @@ failures.each do |failure|
   end
   puts "</details>"
 end
+
+puts "bin/rspec #{files.join(" ")}"
 
 if report_slowest > 0
   STDERR.puts "Reporting slowest tests ⏱"
