@@ -65,12 +65,14 @@ junit_report_files.sort.each do |file|
     name = testcase.attributes['name'].to_s
     unit_name = testcase.attributes[failure_format].to_s
     time = testcase.attributes['time'].to_f
-    files << testcase.attributes['file']
+    
     timings << Timing.new(name, unit_name, time)
     testcase.elements.each("failure") do |failure|
+      files << testcase.attributes['file']
       failures << Failure.new(name, unit_name, text_content(failure), job, :failure, message_content(failure))
     end
     testcase.elements.each("error") do |error|
+      files << testcase.attributes['file']
       failures << Failure.new(name, unit_name, text_content(error), job, :error, message_content(error))
     end
   end
