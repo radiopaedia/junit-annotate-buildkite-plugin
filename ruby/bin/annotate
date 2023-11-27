@@ -65,7 +65,7 @@ junit_report_files.sort.each do |file|
     name = testcase.attributes['name'].to_s
     unit_name = testcase.attributes[failure_format].to_s
     time = testcase.attributes['time'].to_f
-    
+
     timings << Timing.new(name, unit_name, time)
     testcase.elements.each("failure") do |failure|
       files << testcase.attributes['file']
@@ -92,9 +92,9 @@ puts "Total tests: #{testcases}"
 failures.each do |failure|
   puts ""
   puts "<details>"
-  puts "<summary><code>#{failure.name} in #{failure.unit_name}</code></summary>\n\n"
+  puts "<summary><code>#{CGI.escapeHTML failure.name} in #{CGI.escapeHTML failure.unit_name}</code></summary>\n\n"
   if failure.message
-    puts "<p>#{failure.message.chomp.strip}</p>\n\n"
+    puts "<p>#{CGI.escapeHTML failure.message.chomp.strip}</p>\n\n"
   end
   if failure.body
     puts "<pre><code>#{CGI.escapeHTML(failure.body.chomp.strip)}</code></pre>\n\n"
